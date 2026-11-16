@@ -137,7 +137,10 @@ export function ScrubWalkthrough({ clips, effects: initialEffects, variant, titl
         end: "bottom bottom",
         // Small smoothing only. Higher values (0.6 was tried) make the footage
         // trail behind the scroll and feel wrong when the direction reverses.
-        scrub: 0.3,
+        // Touch-only devices get a little more: Lenis does not smooth touch
+        // scrolling, so this is the only smoothing there, and touch/fling
+        // scroll events arrive unevenly.
+        scrub: ScrollTrigger.isTouch === 1 ? 0.5 : 0.3,
         invalidateOnRefresh: true,
       },
     });

@@ -4,7 +4,9 @@
 #   bash scripts/process-video.sh
 #
 # Every frame is a keyframe (-g 1) so seeking to any currentTime is instant.
-# No audio, yuv420p, faststart. Desktop max 1920w (never upscaled), mobile max 960w.
+# No audio, yuv420p, faststart. Both versions keep the source resolution (max
+# 1920w, never upscaled). A phone shows the footage enlarged about 3x (portrait
+# crop of a 16:9 frame on a 3x screen), so the earlier 960w mobile file looked blurry.
 # Source files in /source-video are never modified.
 #
 # Frame interpolation: a clip can be doubled to 48 fps with motion-compensated
@@ -25,9 +27,10 @@ OUT_M="$ROOT/public/video/mobile"
 # Desktop is shown fullscreen and upscaled from 720p, so it gets the higher
 # quality. Measured with ffmpeg blurdetect: CRF 23 visibly loses sharpness
 # against the source, CRF 20 keeps most of it and stays under the 15 MB budget.
-# Mobile is shown small.
+# Mobile: same resolution at CRF 22, slightly smaller (blurdetect mean 5.66,
+# vs 5.59 at CRF 20 and 5.43 for the lossless master; 12.2 MB vs 14.9 MB).
 CRF_DESKTOP="${CRF_DESKTOP:-20}"
-CRF_MOBILE="${CRF_MOBILE:-23}"
+CRF_MOBILE="${CRF_MOBILE:-22}"
 # Interpolated frames come out softer than the originals next to them, which
 # shows as shimmer when scrolling slowly. Sharpening only those frames (cas)
 # by this amount brings both to the same measured sharpness.
@@ -67,7 +70,7 @@ for entry in "${CLIPS[@]}"; do
     -c:v libx264 -preset fast -qp 0 -g 1 -pix_fmt yuv420p "$mid"
 
   encode "$mid" "$OUT_D/$slug.mp4" 1920 "$CRF_DESKTOP"
-  encode "$mid" "$OUT_M/$slug.mp4" 960 "$CRF_MOBILE"
+  encode "$mid" "$OUT_M/$slug.mp4" 1920 "$CRF_MOBILE"
 done
 
 echo "== done"

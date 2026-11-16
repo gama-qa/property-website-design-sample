@@ -3,9 +3,9 @@
   "updated": "2026-11-16",
   "encoding": {
     "codec": "h264 high, yuv420p, every frame a keyframe (-g 1), no audio, faststart",
-    "crf": "desktop 20, mobile 23",
+    "crf": "desktop 20, mobile 22",
     "desktopWidth": "source width, max 1920",
-    "mobileWidth": 960,
+    "mobileWidth": "source width, max 1920 (phones enlarge the footage about 3x, so it is not downscaled)",
     "interpolation": "house-02: 24 -> 48 fps, minterpolate mci; interpolated frames get cas 0.4 so they match the originals in sharpness",
     "scripts": [
       "scripts/process-video.sh",

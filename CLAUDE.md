@@ -106,7 +106,7 @@ The owner replaced the footage on 2026-11-16. Current contents of `/source-video
 ### Processing targets
 
 - Run `bash scripts/process-video.sh` (video) and `node scripts/make-stills.mjs` (images). Walkthrough data: `src/data/walkthrough.json` (rooms, start/end seconds, stills, scroll weights, transition notes).
-- Video: H.264 High, **every frame a keyframe** (`-g 1 -keyint_min 1 -sc_threshold 0 -bf 0`), no audio, `yuv420p`, `+faststart`. CRF 20 desktop (CRF 23 measurably loses sharpness against the 720p source; 20 gives 14.2 MB, under budget), CRF 23 mobile. Desktop = source width, max 1920w → `/public/video/desktop/<slug>.mp4`. Mobile max 960w → `/public/video/mobile/<slug>.mp4`.
+- Video: H.264 High, **every frame a keyframe** (`-g 1 -keyint_min 1 -sc_threshold 0 -bf 0`), no audio, `yuv420p`, `+faststart`. CRF 20 desktop (CRF 23 measurably loses sharpness against the 720p source; 20 gives 14.2 MB, under budget), CRF 22 mobile (12.2 MB). Both keep the source width, max 1920w → `/public/video/desktop/<slug>.mp4` and `/public/video/mobile/<slug>.mp4`. Never downscale the mobile file: a phone enlarges the footage about 3x (portrait crop on a 3x screen) and the old 960w file looked blurry (owner, 2026-11-16).
 - Stills: poster (frame 0 of the video, so poster→video has no jump) and one still per room from the owner's photographs, JPG quality 82, max 2000px wide → `/public/images/stills/<slug>-<room>.jpg`.
 - Budget: a desktop clip above 15 MB must be flagged to the owner, never silently accepted. Preload `metadata` first, full `auto` once the walkthrough is near the viewport.
 
@@ -114,7 +114,7 @@ The owner replaced the footage on 2026-11-16. Current contents of `/source-video
 
 Use the poster-based fallback (no scrub, no WebGL) when **any** of these is true:
 - `prefers-reduced-motion: reduce`
-- coarse pointer / viewport < 768px
+- coarse pointer / viewport < 768px **on a weak device** (capable phones scrub, with WebGL for its sharpening)
 - `navigator.connection.saveData`, or `deviceMemory <= 4`, or `hardwareConcurrency <= 4`
 - the video fails to load or seek within a timeout
 
@@ -154,7 +154,7 @@ Fallback = one full-height section per room with its poster, CSS `scroll-snap-ty
 ### Walkthrough architecture (`components/walkthrough/`, `lib/walkthrough/`)
 
 - `<Walkthrough clipIds>` picks one mode via `lib/capabilities.ts` and renders only that one. Server renders the shared opening title screen. Test any mode with `?walkthrough=stills|css|webgl`.
-- Scrub mode: a tall track with a `position: sticky` stage (pinning without GSAP pin-spacers moving React nodes). ScrollTrigger `scrub: 0.3` drives a progress proxy; a GSAP ticker loop maps it through `lib/walkthrough/timeline.ts` (intro → clips/transitions → outro, `scrollWeights` respected) and writes seeks, shader uniforms and styles directly. React re-renders only when the active room changes. **Keep `scrub` at 0.3 and Lenis `lerp` at 0.085**: 0.6 / 0.075 were tried and the owner reported the scroll as broken (footage trails the wheel and lags on reversal). When the scroll rests, the scrubber lands on an original frame (`originalEvery` from `interpolationFactor` in the JSON).
+- Scrub mode: a tall track with a `position: sticky` stage (pinning without GSAP pin-spacers moving React nodes). ScrollTrigger `scrub: 0.3` drives a progress proxy; a GSAP ticker loop maps it through `lib/walkthrough/timeline.ts` (intro → clips/transitions → outro, `scrollWeights` respected) and writes seeks, shader uniforms and styles directly. React re-renders only when the active room changes. **Keep `scrub` at 0.3 (0.5 on touch-only devices, where Lenis does not smooth) and Lenis `lerp` at 0.085**: 0.6 / 0.075 were tried and the owner reported the scroll as broken (footage trails the wheel and lags on reversal). When the scroll rests, the scrubber lands on an original frame (`originalEvery` from `interpolationFactor` in the JSON).
 - Clips are downloaded whole as blobs, then seeked by `VideoScrubber` (one seek in flight, latest target wins, frame-centred times). Next clip preloads halfway through the current one. Room stills cover a clip until it has loaded.
 - WebGL layer: one fullscreen quad (`EffectCanvas`, `shaders.ts`), radial dissolve from the focus point in the JSON, grain, vignette. Sharpness rules, because the footage is smaller than the screen: canvas `dpr={[1, 2]}` (never lock it to 1: on HiDPI the browser enlarges the canvas again and blurs it); the shader applies a clamped unsharp mask in proportion to the enlargement; the shader must never read `video.readyState` (it drops during every seek); keep edge displacement and zoom tiny (straight architectural lines turn wavy). Runtime WebGL failure → CSS crossfades. Load error/timeout or stalled seeks → stills.
 - Stills mode suspends Lenis (`useSuspendLenis`) because Lenis does not support CSS scroll-snap.

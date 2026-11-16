@@ -3,8 +3,8 @@
  * sniff devices.
  *
  * - stills: reduced motion, Save-Data, no WebGL, or a phone that isn't capable
- * - scrub + css: scrubbed video with CSS crossfades (weaker desktops, capable phones)
- * - scrub + webgl: scrubbed video through the shader layer
+ * - scrub + css: scrubbed video with CSS crossfades (weaker desktops)
+ * - scrub + webgl: scrubbed video through the shader layer (capable desktops and phones)
  *
  * Override for testing: ?walkthrough=stills | css | webgl
  */
@@ -56,7 +56,9 @@ function compute(): WalkthroughMode {
   if (small) {
     return weak
       ? { mode: "stills", reason: "small-weak-device" }
-      : { mode: "scrub", effects: "css", video: "mobile", reason: "small-capable-device" };
+      : // WebGL on capable phones too: its unsharp mask is what keeps 720p footage
+        // crisp when a phone enlarges it about 3x. Runtime WebGL failure still drops to CSS.
+        { mode: "scrub", effects: "webgl", video: "mobile", reason: "small-capable-device" };
   }
   return { mode: "scrub", effects: weak ? "css" : "webgl", video: "desktop", reason: weak ? "weak-desktop" : "capable" };
 }
