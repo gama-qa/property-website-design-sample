@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/*
+ * HALDEN design tokens.
+ * Default Tailwind palette, radii, shadows and blurs are reset on purpose:
+ * if a utility like `bg-blue-500`, `rounded-lg`, `shadow-md` or `backdrop-blur`
+ * doesn't exist, nobody can reach for it.
+ */
+@theme {
+  --color-*: initial;
+  --color-paper: #f6f3ee;
+  --color-stone: #d9d2c7;
+  --color-ink: #1f1e1c;
+  --color-moss: #2f4a3c;
+
+  --font-*: initial;
+  /* Display face (Pluvix Luxury) for headings only. It has no ², ·, –, × or %
+     and its digits are not tabular, so data and UI text stay in Inter.
+     Missing glyphs fall back to Georgia. */
+  --font-display: var(--font-pluvix), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+
+  --ease-*: initial;
+  --ease-halden: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-timing-function: var(--ease-halden);
+  --default-transition-duration: 700ms;
+
+  /* Navbar height, shared by layout offsets and the hero trigger. */
+  --spacing-nav: 4.5rem;
+}
+
+/*
+ * `over-hero:` applies while a page's hero (marked by <NavHero>) is still under
+ * the navbar and the mobile menu is closed. Pure CSS via :has(), so the first
+ * server-rendered paint is already correct and there is no solid-to-clear flash.
+ */
+@custom-variant over-hero {
+  html:has([data-nav-hero="active"]):not(:has([data-menu-open])) & {
+    @slot;
+  }
+}
+
+/* Desktop with enough height for sticky, stacked panels (see components/about/StackedTopics.tsx). */
+@custom-variant tall {
+  @media (min-width: 64rem) and (min-height: 47.5rem) {
+    @slot;
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    font-family: var(--font-sans);
+  }
+
+  /* Radius 0 everywhere, including native form controls (iOS rounds them). */
+  *,
+  ::before,
+  ::after {
+    border-radius: 0;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    appearance: none;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+/* Still-panel walkthrough fallback: native snap (Lenis is suspended meanwhile).
+   Proximity, not mandatory, so the sections after the walkthrough scroll freely. */
+html.snap-walkthrough {
+  scroll-snap-type: y proximity;
+}
+
+/* Custom cursor (components/layout/Cursor.tsx). The class is set only on
+   devices with a fine pointer, and only once the custom cursor is being drawn,
+   so the native cursor is never hidden without a replacement. */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+
+/* Lenis (package does not export its stylesheet). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "version": 5,
+  "updated": "2026-11-16",
+  "encoding": {
+    "codec": "h264 high, yuv420p, every frame a keyframe (-g 1), no audio, faststart",
+    "crf": "desktop 20, mobile 23",
+    "desktopWidth": "source width, max 1920",
+    "mobileWidth": 960,
+    "interpolation": "house-02: 24 -> 48 fps, minterpolate mci; interpolated frames get cas 0.4 so they match the originals in sharpness",
+    "scripts": [
+      "scripts/process-video.sh",
+      "scripts/make-stills.mjs"
+    ]
+  },
+  "walkthroughs": [
+    {
+      "id": "house-02",
+      "usage": "home",
+      "propertySlug": "kemang-garden-house",
+      "source": "source-video/property-1.mp4",
+      "sourceNotes": "1280x720 24fps with audio, single take, no cuts, no borders. Audio removed; doubled to 48fps with motion-compensated interpolation (every other frame is an original). Room stills are the owner's photographs (2752x1536), not video frames.",
+      "video": {
+        "desktop": "/video/desktop/house-02.mp4",
+        "mobile": "/video/mobile/house-02.mp4"
+      },
+      "poster": "/images/stills/house-02-poster.jpg",
+      "width": 1280,
+      "height": 720,
+      "duration": 9.9375,
+      "fps": 48,
+      "frames": 477,
+      "interpolationFactor": 2,
+      "interpolationNote": "Every 2nd frame (even index) is an original; odd frames are interpolated and sharpened to match. The player lands on an original frame when the scroll rests.",
+      "camera": "Single take, steady forward move: towards the facade while the front door opens, through the door and hallway, across the living room, past the kitchen island and dining table, past the bed, out through the sliding doors onto the terrace.",
+      "rooms": [
+        {
+          "id": "exterior",
+          "label": "Eksterior",
+          "name": "Eksterior",
+          "start": 0,
+          "end": 2,
+          "still": "/images/stills/house-02-exterior.jpg",
+          "stillTime": 1,
+          "sentence": "Fasad travertine dan kayu oak dengan pintu depan setinggi dinding, di belakang taman depan kecil.",
+          "specs": [
+            {
+              "label": "Luas tanah",
+              "value": "450 m²"
+            },
+            {
+              "label": "Luas bangunan",
+              "value": "380 m²"
+            },
+            {
+              "label": "Arah hadap",
+              "value": "Utara"
+            }
+          ],
+          "visible": "Two-storey facade in travertine with oak cladding and timber screens; tall timber front door that opens during the approach; potted plants, lawn strip and stepping stones."
+        },
+        {
+          "id": "entrance",
+          "label": "Pintu masuk",
+          "name": "Pintu masuk",
+          "start": 2,
+          "end": 3.4,
+          "still": "/images/stills/house-02-entrance.jpg",
+          "stillTime": 2.7,
+          "sentence": "Pintu depan membuka ke lorong dengan konsol kayu oak tanam, dengan pandangan lurus ke taman.",
+          "specs": [
+            {
+              "label": "Luas",
+              "value": "9 m²"
+            },
+            {
+              "label": "Tinggi plafon",
+              "value": "2,8 m"
+            },
+            {
+              "label": "Pintu depan",
+              "value": "Kayu oak solid, 2,4 m"
+            }
+          ],
+          "visible": "Passing the open timber door; travertine floor, oak console with a bowl and a plant, wall mirror, view through to the living room."
+        },
+        {
+          "id": "living",
+          "label": "Keluarga",
+          "name": "Ruang keluarga",
+          "start": 3.4,
+          "end": 5.4,
+          "still": "/images/stills/house-02-living.jpg",
+          "stillTime": 4.4,
+          "sentence": "Ruang berplafon ganda dengan sofa sudut linen dan kaca setinggi dinding di sisi taman.",
+          "specs": [
+            {
+              "label": "Luas",
+              "value": "42 m²"
+            },
+            {
+              "label": "Tinggi plafon",
+              "value": "5,6 m"
+            },
+            {
+              "label": "Arah hadap",
+              "value": "Timur, ke taman samping"
+            }
+          ],
+          "visible": "Cream corner sofa with cushions, low oak coffee table, table lamp, oak wall panelling, tall windows with sheer curtains and planting outside."
+        },
+        {
+          "id": "kitchen",
+          "label": "Dapur",
+          "name": "Dapur dan ruang makan",
+          "start": 5.4,
+          "end": 7,
+          "still": "/images/stills/house-02-kitchen.jpg",
+          "stillTime": 6.2,
+          "sentence": "Island travertine dengan bangku berdampingan dengan meja makan kayu oak, keduanya menghadap taman.",
+          "specs": [
+            {
+              "label": "Luas",
+              "value": "34 m²"
+            },
+            {
+              "label": "Tinggi plafon",
+              "value": "2,9 m"
+            },
+            {
+              "label": "Arah hadap",
+              "value": "Timur, ke taman samping"
+            }
+          ],
+          "visible": "Travertine island with sink and two stools, oak cabinets with built-in ovens, oak dining table with chairs and a linen runner."
+        },
+        {
+          "id": "bedroom",
+          "label": "Kamar",
+          "name": "Kamar tidur",
+          "start": 7,
+          "end": 8.3,
+          "still": "/images/stills/house-02-bedroom.jpg",
+          "stillTime": 7.65,
+          "sentence": "Ranjang rendah dari kayu oak dan lemari tanam, dengan tirai tipis di pintu geser menuju teras.",
+          "specs": [
+            {
+              "label": "Luas",
+              "value": "24 m²"
+            },
+            {
+              "label": "Tinggi plafon",
+              "value": "2,9 m"
+            },
+            {
+              "label": "Arah hadap",
+              "value": "Selatan, ke teras"
+            }
+          ],
+          "visible": "Low bed with linen bedding, bedside lamp, oak wall panelling, lounge chair, sheer curtain moving at the sliding doors."
+        },
+        {
+          "id": "terrace",
+          "label": "Teras",
+          "name": "Teras",
+          "start": 8.3,
+          "end": 9.9375,
+          "still": "/images/stills/house-02-terrace.jpg",
+          "stillTime": 9.12,
+          "sentence": "Dek kayu dengan dua kursi santai, dikelilingi tanaman di sepanjang dinding pembatas.",
+          "specs": [
+            {
+              "label": "Luas dek",
+              "value": "28 m²"
+            },
+            {
+              "label": "Taman",
+              "value": "60 m²"
+            },
+            {
+              "label": "Arah hadap",
+              "value": "Selatan"
+            }
+          ],
+          "visible": "Through the sliding doors onto a timber deck: two lounge chairs, a round table, lawn, palms and banana plants along a rendered wall."
+        }
+      ],
+      "scrollWeights": [
+        {
+          "from": 0,
+          "to": 3,
+          "weight": 1.2,
+          "reason": "Measured frame-to-frame motion is about 1.2x the middle of the clip (approach and passing the door)."
+        },
+        {
+          "from": 8,
+          "to": 9.9375,
+          "weight": 1.55,
+          "reason": "Fastest camera move of the clip (about 1.6x), out through the sliding doors; more scroll distance keeps the pace even."
+        }
+      ],
+      "transitions": {
+        "focusIn": {
+          "x": 0.5,
+          "y": 0.58,
+          "what": "Front door, centre of frame 0. The door opens in the footage during the first two seconds."
+        },
+        "focusOut": {
+          "x": 0.5,
+          "y": 0.45,
+          "what": "Garden beyond the terrace, centre of the last frame."
+        },
+        "in": "Frame 0 under a charcoal veil behind the title; a radial dissolve from the front door lifts the veil, then the footage shows the door opening.",
+        "betweenRooms": "None needed: continuous take with no cuts. Rooms change through the text overlay only.",
+        "out": "Radial dissolve from the garden into warm white, which continues into the next section."
+      }
+    }
+  ],
+  "notCombined": "Each walkthrough is one property. Clips of different properties are never chained.",
+  "retired": "house-01 and apartment-01 (earlier footage) are no longer used anywhere: the owner asked for the current source-video material only (2026-11-16).",
+  "language": "id (owner request 2026-11-16). The \"visible\" and note fields stay in English: they are internal notes, not site copy."
+}
